@@ -35,6 +35,11 @@ class LandGeneration():
         self.count_ft2 = 1
         
     def ResArea(self):
+        '''
+        Residential Area Size Determination. Randomly sized every time code is run
+        Returns ranges of row and column
+        
+        '''
         row = self.ROW
         col = self.COL        
         # DEFINE THE SIZE OF THE RESIDENTIAL AREA FROM CENTER
@@ -55,6 +60,10 @@ class LandGeneration():
         return li
     
     def AgLand(self):
+        '''
+        Agricultural Land Size Determination. Randomnly sized every time code is run
+        Returns ranges of row and column
+        '''
         row = self.ROW
         col = self.COL
         rand_per2 = random.randint(5,15)
@@ -73,6 +82,9 @@ class LandGeneration():
         return li
     
     def ForestLand(self):
+        '''
+        Forest Areas Land Size Determination. Randomly sized and returns range of row and column
+        '''
         row = self.ROW
         col = self.COL
         rand_per3 = random.randint(15,40)
@@ -94,7 +106,14 @@ class LandGeneration():
         return li
     
     
-    def CreateLand(self, LI, typ):        
+    def CreateLand(self, LI, typ):     
+        '''
+        Taking the sizes of each of the areas specified in the above functions,
+        this function maps their sizes to the map. It returns a list of values in
+        an array. However, it can only do one area at a time, so the next funcntion 
+        CombineLand, combines all these map arrays
+        
+        '''
         self.DATA = []  # CLEAR THE DATA LIST SO THAT IT DOES NOT KEEP APPENDING TO ITSELF
         print("Size of " + str(typ) + ": " +  str(LI))
         Col = LI[0]
@@ -120,6 +139,10 @@ class LandGeneration():
         return data    
         
     def CombineLands(self, DAT):
+        '''
+        Combines all the maps into one array, which will be used to plot a map
+        Returns this array to the graphing function
+        '''
         self.GRID = []
         t = 0
         for r in range(self.ROW):
@@ -135,6 +158,9 @@ class LandGeneration():
         return self.GRID
     
     def GraphLand(self, data):
+        '''
+        Graphs all the land maps in one figure
+        '''
         cmap = colors.ListedColormap(['white','lawngreen','green','#556B2F','#228B22'])
         bounds = [0,10,20,30,40,50]
         # ([0,20,30],2) = [0,20] is one color and [20,30] is another color?
