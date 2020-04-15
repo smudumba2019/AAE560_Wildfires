@@ -13,12 +13,12 @@ import random
 
 class LandGeneration():
     '''
-    LandGeneration Class creates Land Object by plotting cells of different colors, representing vegetations
-    
-    The attributes of LandGeneration include:
-        
-    The methods of LandGeneration include:
-        
+    LandGeneration Class creates Land Object by plotting cells of different colors, representing vegetations:
+        1. Residential Areas are in White Squares [Value 5]
+        2. Agricultural Lands are in Light Green Squares [Value 15]
+        3. Forest Type 1 Areas are given in Green Squares [Value 25]
+        4. Forest Type 2 Areas are given in Dark Olive Green [Value 35]
+        5. Forest Type 3 Areas are given in Forest Green [Value 45]
     '''
     
     def __init__(self, LandSize):
@@ -28,10 +28,11 @@ class LandGeneration():
         self.ROW = LandSize[0]
         self.COL = LandSize[1]
         self.DATA = []
+        self.GRID = []
         self.count_res = 0
         self.count_ag = 0
         self.count_ft1 = 0
-        self.count_ft2 = 0
+        self.count_ft2 = 1
         
     def ResArea(self):
         row = self.ROW
@@ -74,15 +75,18 @@ class LandGeneration():
     def ForestLand(self):
         row = self.ROW
         col = self.COL
-        rand_per3 = random.randint(15,25)
+        rand_per3 = random.randint(15,40)
         interval_row3 = int(row * rand_per3/100)
         interval_col3 = int(col * rand_per3/100)
         if self.count_ft1 % 2 == 0:
             rand4 = random.randint(5,45)
+            row_res4 = int(row * rand4/100) 
+            col_res4 = int(col * (1-rand4/100))
         else:
             rand4 = random.randint(65,95)
-        row_res4 = int(row * rand4/100) 
-        col_res4 = int(col * (rand4/100))
+            row_res4 = int(row * rand4/100) 
+            col_res4 = int(col * (1-rand4/100))
+        
         ft1_row= range(row_res4 - interval_row3,row_res4 + interval_row3)
         ft1_col = range(col_res4 - interval_col3, col_res4 + interval_col3)
         li = [ft1_row, ft1_col]
@@ -92,7 +96,7 @@ class LandGeneration():
     
     def CreateLand(self, LI, typ):        
         self.DATA = []  # CLEAR THE DATA LIST SO THAT IT DOES NOT KEEP APPENDING TO ITSELF
-        print(LI)
+        print("Size of " + str(typ) + ": " +  str(LI))
         Col = LI[0]
         Row = LI[1]
         
@@ -116,7 +120,7 @@ class LandGeneration():
         return data    
         
     def CombineLands(self, DAT):
-        GRID = []
+        self.GRID = []
         t = 0
         for r in range(self.ROW):
             row_ = []
@@ -127,10 +131,8 @@ class LandGeneration():
                 min_ = min(temp)
                 #min_ = min(DAT[t][r][c],DAT[t+1][r][c],DAT[t+2][r][c])
                 row_.append(min_)
-            GRID.append(row_)    
-        print(GRID)
-        print(type(GRID))
-        return GRID
+            self.GRID.append(row_)    
+        return self.GRID
     
     def GraphLand(self, data):
         cmap = colors.ListedColormap(['white','lawngreen','green','#556B2F','#228B22'])
@@ -145,6 +147,7 @@ class LandGeneration():
         ax.set_yticks(np.arange(-.5, len(data), 1)," ")
         #ax.get_yaxis().set_visible(False)
         plt.show()
+
 
 # GENERATE LAND BOUNDARIES        
 Land1 = LandGeneration([100,100])
@@ -173,4 +176,3 @@ C8 = Land1.CreateLand(Ft22, "2")
 AA = Land1.CombineLands([C1, C2, C3, C4, C5, C6, C7, C8])
 # GRAPH THE TOTAL LAND
 Land1.GraphLand(AA)
-print(Land1.count_ag)
