@@ -160,9 +160,17 @@ class LandGeneration():
     def GraphLand(self, data):
         '''
         Graphs all the land maps in one figure
+        0-10: White for Residential Areas
+        10-20: Lawngreen for Agriculture Lands
+        20-30: Green for Forest Area 1
+        30-40: Olive Green for Forest Area 2
+        40-50: Forest Green for Forest Area 3
+        50-60: Grey for Smoke due to fire
+        60-70: Red for Actual Fire
+        70-80: Black for destroyed land
         '''
-        cmap = colors.ListedColormap(['white','lawngreen','green','#556B2F','#228B22'])
-        bounds = [0,10,20,30,40,50]
+        cmap = colors.ListedColormap(['white','lawngreen','green','#556B2F','#228B22', '#C0C0C0', '#B22222', '#000000'])
+        bounds = [0,10,20,30,40,50,60,70,80]
         # ([0,20,30],2) = [0,20] is one color and [20,30] is another color?
         norm = colors.BoundaryNorm(bounds,cmap.N)
         fig, ax = plt.subplots()
