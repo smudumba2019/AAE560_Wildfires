@@ -67,14 +67,12 @@ class drone:
             ydir = 0
         
         #move toward x
-        while self.xcell != xtarget:
-            self.xcell=self.xcell+xdir
-            self.batt_drain
+        self.xcell=self.xcell+xdir
         
         #move toward y
-        while self.ycell != ytarget:
-            self.ycell=self.ycell+ydir
-            self.batt_drain
+        self.ycell=self.ycell+ydir
+        self.batt_drain
+        self.check_return
     
     #check battery level        
     def check_return(self):
@@ -84,23 +82,75 @@ class drone:
     
     #read scan heat
     def scan_heat(self,heatmap):
+        self.fire_location = [[999,999]]
         #read fire status in IR range
-        self.IR_range_x=np.arange(self.xcell-self.IR_radius,self.xcell+self.IR_radius)
-        self.IR_range_y=np.arange(self.ycell-self.IR_radius,self.ycell+self.IR_radius)
+        if (self.xcell-self.IR_radius) < 0:
+            IR_lower_x = 0
+        else:
+            IR_lower_x = self.xcell-self.IR_radius  
+        
+        if (self.xcell+self.IR_radius) > 99:
+            IR_upper_x = 99
+        else:
+            IR_upper_x = self.xcell+self.IR_radius
+            
+        if (self.ycell-self.IR_radius) < 0:
+            IR_lower_y = 0
+        else:
+            IR_lower_y = self.ycell-self.IR_radius  
+        
+        if (self.ycell+self.IR_radius) > 99:
+            IR_upper_y = 99
+        else:
+            IR_upper_y = self.ycell+self.IR_radius
+            
+        self.IR_range_x=np.arange(IR_lower_x,IR_upper_x)
+        self.IR_range_y=np.arange(IR_lower_y,IR_upper_y)
+        print(self.IR_range_x)
+        print(self.IR_range_y)
         for x in self.IR_range_x:
             for y in self.IR_range_y:
                 if heatmap[x][y] >= self.IR_heat_trigger:
-                    print("Fire is detected by IR sensor at the coordinate [" + x + "," + y + "]")
-                    np.append(self.fire_location,[x,y],axis = 0)
+                    print("Fire is detected by IR sensor at the coordinate")
+                    print(x)
+                    print("and")
+                    print(y)
+                    self.fire_location = np.append(self.fire_location,[[x,y]],axis = 0)
+
         #read smoke status in visual range
-        self.Visual_range_x=np.arange(self.xcell-self.Visual_radius,self.xcell+self.Visual_radius)
-        self.Visual_range_y=np.arange(self.ycell-self.Visual_radius,self.ycell+self.Visual_radius)
+        if (self.xcell-self.Visual_radius) < 0:
+            Visual_lower_x = 0
+        else:
+            Visual_lower_x = self.xcell-self.Visual_radius  
+        
+        if (self.xcell+self.Visual_radius) > 99:
+            Visual_upper_x = 99
+        else:
+            Visual_upper_x = self.xcell+self.Visual_radius
+            
+        if (self.ycell-self.Visual_radius) < 0:
+            Visual_lower_y = 0
+        else:
+            Visual_lower_y = self.ycell-self.Visual_radius  
+        
+        if (self.ycell+self.IR_radius) > 99:
+            Visual_upper_y = 99
+        else:
+            Visual_upper_y = self.ycell+self.Visual_radius
+            
+        self.Visual_range_x=np.arange(Visual_lower_x,Visual_upper_x)
+        self.Visual_range_y=np.arange(Visual_lower_y,Visual_upper_y)
+
         for x in self.Visual_range_x:
             for y in self.Visual_range_y:
                 if heatmap[x][y] >= self.Visual_heat_trigger:
-                    print("Fire is detected by smoke at the coordinate [" + x + "," + y + "]")        
-                    np.append(self.fire_location,[x,y],axis = 0)
-        return np.unique(self.fire_location)
+                    print("Fire is detected by smoke at the coordinate")      
+                    print(x)
+                    print("and")
+                    print(y)
+                    self.fire_location = np.append(self.fire_location,[[x,y]],axis = 0)
+        self.fire_location = np.delete(self.fire_location, np.where(self.fire_location == [999,999]),0)
+        return np.unique(self.fire_location, axis = 0)
         #send alarm
 
 
