@@ -584,8 +584,8 @@ for t in range (0, time):
             for p2 in range(Y2[i]-D1.Visual_radius,Y2[i]+D1.Visual_radius):
                 for q2 in range(X2[i]-D1.Visual_radius,X2[i]+D1.Visual_radius):                            
                     if AA[p2][q2] >= D1.Visual_heat_trigger:
-                        X1[i] = rfc
-                        Y1[i] = rfr
+                        X2[i] = rfc
+                        Y2[i] = rfr
                         print("Detected at time, t = " + str(t) + " min by visual camera")
                         print("At location: x =" + str(q2) + ", y =" + str(p2))
                         
